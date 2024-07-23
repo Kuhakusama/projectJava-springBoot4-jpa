@@ -17,7 +17,7 @@ public class User implements Serializable{ //o serializable serve para definir o
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 	private String name;
 	private String email;
 	private String phone;
@@ -27,7 +27,7 @@ public class User implements Serializable{ //o serializable serve para definir o
 		
 	}
 
-	public User(long id, String email, String phone, String password, String name) {
+	public User(Long id, String email, String phone, String password, String name) {
 		super();
 		this.id = id;
 		this.name = name;
