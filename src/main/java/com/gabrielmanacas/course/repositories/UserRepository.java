@@ -6,6 +6,7 @@ import com.gabrielmanacas.course.entities.User;
 
 //o Jpa vai fazer a injection dos dados no bacno de dados
 //vão ser interfaces
+//Eu poderia fazer @Repository mas ja esta heradadno o repository do Jpa
 public interface UserRepository extends JpaRepository<User, Long> { //framework do proprio spring
 	
 }
