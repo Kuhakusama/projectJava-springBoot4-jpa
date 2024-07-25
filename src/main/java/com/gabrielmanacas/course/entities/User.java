@@ -1,12 +1,17 @@
 package com.gabrielmanacas.course.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -22,6 +27,12 @@ public class User implements Serializable{ //o serializable serve para definir o
 	private String email;
 	private String phone;
 	private String password;
+	
+	@JsonIgnore  //faz com que o loop nãp aconteça para preservar memoria
+	@OneToMany(mappedBy = "cliente") //define a associação da classe user, esse muitos para um esta mappeado pelo atributo client na classe de Order
+	private List<Order> orders = new ArrayList<>(); //to many, um usuario pode ter multiplos pedidos
+	//if collection == somente get, ou seja não alteramos sua composição
+	//associação de mão dupla por isso iria travar em um loop
 	
 	public User() { //no construtor sempre sera um vazio pois o framework???, alis construturoes são o tal super() e new
 		
@@ -75,6 +86,10 @@ public class User implements Serializable{ //o serializable serve para definir o
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	public List<Order> getOrders() {
+		return orders;
+	}
 
 	@Override
 	public int hashCode() {
@@ -92,4 +107,5 @@ public class User implements Serializable{ //o serializable serve para definir o
 		User other = (User) obj;
 		return id == other.id;
 	}
+	
 }
