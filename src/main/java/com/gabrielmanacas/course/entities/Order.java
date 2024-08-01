@@ -2,7 +2,9 @@ package com.gabrielmanacas.course.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gabrielmanacas.course.entities.enums.OrderStatus;
@@ -13,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -35,6 +38,10 @@ public class Order implements Serializable{
 	@ManyToOne //definie a associação e a chave estrangeira somente na tabela(lado) do Order.
 	@JoinColumn(name = "client_id")//define o nome da chave estrangeira
 	private User cliente; //vai ser o atributo que referencia a classe de Users
+	
+	@OneToMany(mappedBy = "id.order") //o id de orderItem que vai conter o pedido
+	//um item pode ter varios pedidos
+	private Set<OrderItem> itens = new HashSet<>();
 	
 	public Order() {}
 
@@ -82,6 +89,10 @@ public class Order implements Serializable{
 		this.cliente = cliente;
 	}
 
+	public Set<OrderItem> getItens(){
+		return itens;
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
