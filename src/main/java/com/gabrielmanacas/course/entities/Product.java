@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -32,6 +33,9 @@ public class Product implements Serializable{
 	@JoinTable(name = "tb_product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private Set<Category> categories = new HashSet<>();
 	//não irei porecisar chamar o construtor pois o codigo acima ja chama a collection de categorys
+	
+	@OneToMany(mappedBy = "id.product") //o orderItem possui um id orderItemPk assim eu acesso o items de cada um acionado o id.<tipo>
+	private Set<OrderItem> itens = new HashSet<>(); //coleção orderiem associado ao meu produto
 	
 	public Product() {}
 
@@ -89,7 +93,17 @@ public class Product implements Serializable{
 	}
 	//a necissidade de deixar somente o setter e puramente boas praticas devidos o lazy loading e o hibernate
 	//o seter iria mudar toda a collection assim diminuindo a integridade dos dados
-
+	
+	public Set<Order> getOrders(){ //nome da função esta no diagrama
+		//ira varrer o orderItem e retorna os orders
+		Set<Order> set = new HashSet<>(); 
+		for(OrderItem x:itens) //
+		{
+			set.add(x.getOrder());
+		}
+		return set; //retorna a varredura
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
