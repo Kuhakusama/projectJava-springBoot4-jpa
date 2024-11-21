@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -94,6 +96,7 @@ public class Product implements Serializable{
 	//a necissidade de deixar somente o setter e puramente boas praticas devidos o lazy loading e o hibernate
 	//o seter iria mudar toda a collection assim diminuindo a integridade dos dados
 	
+	@JsonIgnore
 	public Set<Order> getOrders(){ //nome da função esta no diagrama
 		//ira varrer o orderItem e retorna os orders
 		Set<Order> set = new HashSet<>(); 

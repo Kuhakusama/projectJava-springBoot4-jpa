@@ -17,7 +17,7 @@ public class OrderItem implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@EmbeddedId
-	private OrderItemPk id = new OrderItemPk(); //callse auxiliar sempre sera preciso instanciar a mesma
+	private OrderItemPk id = new OrderItemPk(); //call se auxiliar sempre sera preciso instanciar a mesma
 	
 	private Integer quantity;
 	private Double price;
@@ -32,6 +32,7 @@ public class OrderItem implements Serializable{
 		this.price = price;
 	}
 	
+	@JsonIgnore
 	public Order getOrder() {
 		return id.getOrder();
 	}
@@ -40,10 +41,13 @@ public class OrderItem implements Serializable{
 		id.setOrder(order);
 	}
 	
-	@JsonIgnore
 	public Product getProduct() {
 		return id.getProduct();
 	}
+	
+	public Double getSubTotal() { //na plataforma java o que vale para aparecer como função é o pre-fixo Get
+		return price*quantity;
+	};
 	
 	public void setProduct(Product product) {
 		id.setProduct(product);

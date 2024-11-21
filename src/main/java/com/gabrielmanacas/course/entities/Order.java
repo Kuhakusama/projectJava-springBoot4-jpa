@@ -9,6 +9,7 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gabrielmanacas.course.entities.enums.OrderStatus;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -42,6 +44,9 @@ public class Order implements Serializable{
 	@OneToMany(mappedBy = "id.order") //o id de orderItem que vai conter o pedido
 	//um item pode ter varios pedidos
 	private Set<OrderItem> itens = new HashSet<>();
+	
+	@OneToOne(mappedBy = "order" , cascade = CascadeType.ALL) //Mapeando os id para terem o mesmo id, cascade é obrigatorio
+	private Payment payment;
 	
 	public Order() {}
 
@@ -70,8 +75,6 @@ public class Order implements Serializable{
 	public void setMoment(Instant moment) {
 		this.moment = moment;
 	}
-
-	
 	
 	public OrderStatus getOrderStatus() {
 		return OrderStatus.valueOf(orderStatus);
@@ -88,10 +91,26 @@ public class Order implements Serializable{
 	public void setCliente(User cliente) {
 		this.cliente = cliente;
 	}
+	
+	public Payment getPayment() {
+		return payment;
+	}
+
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
 
 	public Set<OrderItem> getItens(){
 		return itens;
 	}
+	
+	public Double getTotal() {
+		double sum = 0.0;
+		for(OrderItem x: itens) {
+			sum += x.getSubTotal();
+		}
+		return sum;
+	};
 	
 	@Override
 	public int hashCode() {

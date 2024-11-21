@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.gabrielmanacas.course.entities.User;
 import com.gabrielmanacas.course.repositories.UserRepository;
+import com.gabrielmanacas.course.services.exceptions.ResourceNotFoundExceptions;
 
 @Service //decorador para definir um service na camada de services
 public class UserServices {
@@ -21,7 +22,28 @@ public class UserServices {
 	
 	public User findById(Long id) {
 		Optional<User> obj = repository.findById(id); //retorna um Optional com tipo User
-		return obj.get(); //retorna somente o objeto User
+		return obj.orElseThrow(() -> new ResourceNotFoundExceptions(id)); //retorna somente o objeto User
 		//como no netsj as chamadas vão retornar uma entidade com diversos atributos, o campo User possui as informações desejadas
+	}
+	
+	public User insert(User obj) { //inserção de objetos tipo user
+		return repository.save(obj);
+	}
+	
+	public void delete(Long id) { //os tipos são em caizxa alta, assim como as classes, ja o resto começo com letra padrão
+		repository.deleteById(id);
+	}
+	
+	public User update(Long id, User obj) {
+		User entity = repository.getReferenceById(id);
+		updateData(entity, obj); //função para atualizar as entidades. 
+		return repository.save(entity); //ertorna para o banco de dados os dados  atualizados. 
+	}
+
+	private void updateData(User entity, User obj) { // void pq não necessita retornar nada para o banco de dados, ache internamente dentro no codigo
+		//assim como sua referencia
+		entity.setName(obj.getName());
+		entity.setEmail(obj.getEmail());
+		entity.setPhone(obj.getPhone());
 	}
 }
